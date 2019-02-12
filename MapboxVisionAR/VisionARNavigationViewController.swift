@@ -50,8 +50,16 @@ public class VisionARNavigationViewController: UIViewController {
     }
     
     private let visionManager = VisionManager.shared
-    private var renderer: ARRenderer?
+    public var renderer: ARRenderer?
     private var navigationManager: NavigationManager?
+
+    public var arrowColor: UIColor? {
+        didSet {
+            if let arrowColor = arrowColor {
+                renderer?.arrowColor = arrowColor
+            }
+        }
+    }
     
     /**
         Create an instance of VisionARNavigationController by specifying route controller from MapboxCoreNavigation framework.

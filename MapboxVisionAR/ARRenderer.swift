@@ -83,7 +83,7 @@ extension UIColor {
  *   Z
  */
 
-class ARRenderer: NSObject, MTKViewDelegate {
+public class ARRenderer: NSObject, MTKViewDelegate {
     
     private let dataProvider: ARDataProvider
     private let device: MTLDevice
@@ -445,11 +445,11 @@ class ARRenderer: NSObject, MTKViewDelegate {
         }
     }
     
-    func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
+    public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
         // TODO: update camera
     }
     
-    func draw(in view: MTKView) {
+    public func draw(in view: MTKView) {
         update(view)
         
         // render
