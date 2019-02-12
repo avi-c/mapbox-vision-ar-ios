@@ -60,6 +60,19 @@ private let textureMappingVertices: [Float] = [
     -1.0,  1.0, 0.0,    0.0, 0.0
 ]
 
+extension UIColor {
+    var colorComponents: (red: CGFloat, green: CGFloat, blue: CGFloat, alpha: CGFloat)? {
+        guard let components = self.cgColor.components else { return nil }
+
+        return (
+            red: components[0],
+            green: components[1],
+            blue: components[2],
+            alpha: components[3]
+        )
+    }
+}
+
 /* Coordinate system:
  *      Y
  *      ^
@@ -101,6 +114,16 @@ class ARRenderer: NSObject, MTKViewDelegate {
     private var arrowMidPoint = float3(0, 0, 0)
     
     private let backgroundVertexBuffer: MTLBuffer
+
+    public var arrowColor: UIColor = UIColor(red: 0.2745, green: 0.4117, blue: 0.949, alpha: 0.99) {
+        didSet {
+            if let entity = arrowNode.entity {
+                let colorComponents = arrowColor.colorComponents!
+                let arrowColorFloat = float4(x: Float(colorComponents.red), y: Float(colorComponents.green), z: Float(colorComponents.blue), w: Float(colorComponents.alpha))
+                entity.material.diffuseColor = arrowColorFloat//kArrowColor
+            }
+        }
+    }
     
     enum ARRendererError: LocalizedError {
         case cantCreateCommandQueue
@@ -191,7 +214,9 @@ class ARRenderer: NSObject, MTKViewDelegate {
         do {
             let arrowMesh = try loadMesh(name: "lane")
             let arrowEntity = AREntity(mesh: arrowMesh)
-            arrowEntity.material.diffuseColor = kArrowColor
+            let colorComponents = arrowColor.colorComponents!
+            let arrowColorFloat = float4(x: Float(colorComponents.red), y: Float(colorComponents.green), z: Float(colorComponents.blue), w: Float(colorComponents.alpha))
+            arrowEntity.material.diffuseColor = arrowColorFloat//kArrowColor
             arrowEntity.material.specularPower = 100
             arrowEntity.material.specularColor = float3(1, 1, 1) //kArrowColor.xyz
             arrowEntity.material.ambientLightColor = kArrowColor.xyz //float3(0.5, 0.5, 0.5)
